@@ -5,7 +5,7 @@ using System.Text;
 
 namespace src.Validator
 {
-    public class ValidateResult : IValidateResult
+    public class ValidateResult : Result.Result, IValidateResult
     {
     }
 }

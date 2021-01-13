@@ -10,37 +10,17 @@ namespace src.Error
     {
         public string Category { get; private set; }
 
-        public List<IMessage> Messages { get; private set; }
+        public IMessage Message { get; private set; }
 
-        public Error(string category)
-            :this(category, new List<IMessage>())
-        {
-        }
-
-        public Error(string category, List<IMessage> messages)
+        public Error(string category, IMessage message)
         {
             Category = category;
-            Messages = messages;
+            Message = message;
         }
 
         public string Write()
         {
-            var message = string.Join(";\n", Messages);
-        }
-
-        public void AddMessage(IMessage message)
-        {
-            Messages.Add(message);
-        }
-
-        public void AddMessage(IList<IMessage> messages)
-        {
-            Messages.AddRange(messages);
-        }
-
-        public void AddMessage(IEnumerable<IMessage> messages)
-        {
-            Messages.AddRange(messages);
+            return $"{Category}:{Message.Write()}";
         }
     }
 }
