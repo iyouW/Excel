@@ -1,7 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Resource Include="Excel\Person.xlsx">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\src.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Excel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Excel\Person.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <PropertyGroup>
