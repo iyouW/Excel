@@ -15,6 +15,15 @@ namespace client
                 excel.Load(fs);
                 var res = excel.Read<Person>();
                 Console.WriteLine(res);
+
+                var excel1 = new NpoiExcel();
+                excel1.Load(null);
+                excel1.Write(res.Data);
+
+                using (var fs1 = new FileStream("Excel/Person_Copy.xlsx", FileMode.OpenOrCreate, FileAccess.Write))
+                {
+                    excel1.Save(fs1,false);
+                }
             }
         }
     }

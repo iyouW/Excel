@@ -20,9 +20,16 @@ namespace src.Excel
 
         private ConcurrentDictionary<string, Dictionary<int, string>> _headers = new ConcurrentDictionary<string, Dictionary<int, string>>();
 
-        public void Load(Stream file)
+        public void Load(Stream file = null)
         {
-            _workBook = new XSSFWorkbook(file);
+            if (file == null)
+            {
+                _workBook = new XSSFWorkbook();
+            }
+            else
+            {
+                _workBook = new XSSFWorkbook(file);
+            }
         }
 
         public ISheetValidateResult Validate<T>() where T : class, new()
@@ -33,26 +40,25 @@ namespace src.Excel
         public ISheetReadResult<T> Read<T>() where T : class, new()
         {
             var res = new SheetReadResult<T>();
-            try
-            {
-                var mapper = GetClassMapper<T>();
-                ISheet sheet = _workBook.GetSheet(mapper.MapName);
-                ReadSheet(res, sheet);
-            }
-            catch (Exception ex)
-            {
-            }
+            var mapper = GetClassMapper<T>();
+            ISheet sheet = _workBook.GetSheet(mapper.MapName);
+            ReadSheet(res, sheet);
             return res;
         }
 
         public ISheetWriteResult Write<T>(IEnumerable<T> data) where T : class, new()
         {
-            throw new NotImplementedException();
+            var res = new SheetWriteResult();
+            var mapper = GetClassMapper<T>();
+            ISheet sheet = _workBook.CreateSheet(mapper.MapName);
+            WriteHeader(res, sheet, mapper);
+            WriteData(res, sheet, mapper, data);
+            return res;
         }
 
         public void Save(Stream file, bool leaveOpen)
         {
-            throw new NotImplementedException();
+            _workBook.Write(file);
         }
 
         private void ReadSheet<T>(ISheetReadResult<T> res, ISheet sheet)
@@ -101,13 +107,41 @@ namespace src.Excel
             return res;
         }
 
+        private void WriteHeader(ISheetWriteResult res, ISheet sheet, IClassMapper mapper)
+        {
+            var headerRow = sheet.CreateRow(0);
+            var index = 0;
+            foreach (var propMapper in mapper.PropertyMappers)
+            {
+                headerRow.CreateCell(index++).SetCellValue(propMapper.MapName);
+            }
+        }
+
+        private void WriteData<T>(ISheetWriteResult res, ISheet sheet, IClassMapper mapper, IEnumerable<T> data)
+            where T : class, new()
+        {
+            var rowIndex = sheet.PhysicalNumberOfRows;
+            foreach (var item in data)
+            {
+                var row = sheet.CreateRow(rowIndex++);
+                WriteRow(res, row, mapper, item);
+            }
+        }
+
+        private void WriteRow<T>(ISheetWriteResult res, IRow row, IClassMapper mapper, T data)
+        {
+            var columnIndex = 0;
+            foreach (var propMapper in mapper.PropertyMappers)
+            {
+                var cell = row.CreateCell(columnIndex++);
+                var value = propMapper.PropertyInfo.GetValue(data);
+                cell.WriteValue(value);
+            }
+        }
+
         private IClassMapper<T> GetClassMapper<T>() where T : class
         {
             var mapper = ClassMapperDict.GetMapper<T>();
-            if (mapper == null)
-            {
-                
-            }
             return mapper as IClassMapper<T>;
         }
     }
