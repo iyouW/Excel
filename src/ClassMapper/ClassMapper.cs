@@ -16,11 +16,12 @@ namespace src.ClassMapper
 
         public List<IPropertyMapper> PropertyMappers { get; protected set; }
 
-        public List<IValidator> Validators { get; protected set; }
+        public List<IValidator> Validators { get; private set; }
 
         public ClassMapper()
         {
             PropertyMappers = new List<IPropertyMapper>();
+            Validators = new List<IValidator>();
         }
 
         protected void To(string mapName)
