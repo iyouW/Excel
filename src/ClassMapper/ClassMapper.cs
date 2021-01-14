@@ -1,4 +1,5 @@
-﻿using src.ClassMapper.Abstraction;
+﻿using Excel.Validator.Abstraction;
+using src.ClassMapper.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace src.ClassMapper
         public string MapName { get; protected set; }
 
         public List<IPropertyMapper> PropertyMappers { get; protected set; }
+
+        public List<IValidator> Validators { get; protected set; }
 
         public ClassMapper()
         {
@@ -37,6 +40,22 @@ namespace src.ClassMapper
             var mapper = new PropertyMapper(propertyInfo);
             PropertyMappers.Add(mapper);
             return mapper;
+        }
+
+        protected ClassMapper<T> Validate(Expression<Func<T, object>> lambda, Func<List<IPropertyMapper>, IValidator> ValidatorFactory)
+        {
+            var propMappers = new List<IPropertyMapper>();
+            var members = GetMemberInfos(lambda);
+            foreach (var member in members)
+            {
+                var propMapper = PropertyMappers.Find(o => o.Name == member.Name);
+                if (propMapper == null)
+                { 
+                }
+                propMappers.Add(propMapper);
+            }
+            Validators.Add(ValidatorFactory(propMappers));
+            return this;
         }
 
         private void GuardForDuplicatePropertyMap(PropertyInfo propertyInfo)
@@ -68,6 +87,21 @@ namespace src.ClassMapper
                         return null;
                 }
             }
+        }
+
+        private List<MemberInfo> GetMemberInfos(LambdaExpression lambda)
+        {
+            var res = new List<MemberInfo>();
+            var nodeType = lambda.Body.NodeType;
+            if (nodeType == ExpressionType.New)
+            {
+                res.AddRange(((NewExpression)lambda.Body).Members);
+            }
+            else
+            {
+                res.Add(GetMemberInfo(lambda));
+            }
+            return res;
         }
     }
 }

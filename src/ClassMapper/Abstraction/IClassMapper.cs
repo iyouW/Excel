@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Excel.Validator.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace src.ClassMapper.Abstraction
     {
         string MapName { get; }
         List<IPropertyMapper> PropertyMappers { get; }
+        List<IValidator> Validators { get; }
     }
 
     public interface IClassMapper<T> : IClassMapper

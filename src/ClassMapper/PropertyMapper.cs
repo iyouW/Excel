@@ -1,4 +1,5 @@
-﻿using src.ClassMapper.Abstraction;
+﻿using Excel.Validator.Abstraction;
+using src.ClassMapper.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -10,9 +11,11 @@ namespace src.ClassMapper
     {
         public string Name => PropertyInfo.Name;
 
-        public string MapName { get; private set; }
+        public string MapName { get; protected set; }
 
-        public PropertyInfo PropertyInfo { get; private set; }
+        public PropertyInfo PropertyInfo { get; protected set; }
+
+        public List<IValidator> Validators { get; protected set; }
 
         public PropertyMapper(PropertyInfo propertyInfo)
         {
@@ -22,6 +25,18 @@ namespace src.ClassMapper
         public PropertyMapper To(string mapName)
         {
             MapName = mapName;
+            return this;
+        }
+
+        public PropertyMapper ClearValidator()
+        {
+            Validators.Clear();
+            return this;
+        }
+
+        public PropertyMapper WithValiator(IValidator validator)
+        {
+            Validators.Add(validator);
             return this;
         }
     }

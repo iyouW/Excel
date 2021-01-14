@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Excel.Validator.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -10,5 +11,6 @@ namespace src.ClassMapper.Abstraction
         string Name { get; }
         string MapName { get; }
         PropertyInfo PropertyInfo { get; }
+        List<IValidator> Validators { get; }
     }
 }
