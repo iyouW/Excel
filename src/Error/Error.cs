@@ -1,26 +1,28 @@
 ﻿using Excel.Error.Abstraction;
-using Excel.Message.Abstraction;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace src.Error
 {
     public class Error : IError
     {
-        public string Category { get; private set; }
+        public string Message { get; private set; }
 
-        public IMessage Message { get; private set; }
+        public List<IError> InnerErrors { get; private set; }
 
-        public Error(string category, IMessage message)
-        {
-            Category = category;
-            Message = message;
+        public Error(string message)
+            : this(message, new List<IError>())
+        { 
         }
 
-        public string Write()
+        public Error(string message, List<IError> innerErrors)
         {
-            return $"{Category}:{Message.Write()}";
+            Message = message;
+            InnerErrors = innerErrors;
+        }
+
+        public IEnumerable<string> Write()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

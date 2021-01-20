@@ -7,8 +7,10 @@ namespace src.Validator
 {
     public class RequiredValidator : IValidator
     {
+        
         public IValidateResult Validate(object value)
         {
+            var res = new ValidateResult();
             throw new NotImplementedException();
         }
     }

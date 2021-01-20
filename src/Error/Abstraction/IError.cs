@@ -1,11 +1,11 @@
-using Excel.Message.Abstraction;
 using System.Collections.Generic;
 
 namespace Excel.Error.Abstraction
 {
-    public interface IError : IMessage
+    public interface IError
     {
-        string Category {get;}
-        IMessage Message { get; }
+        string Message { get; }
+        List<IError> InnerErrors { get; }
+        IEnumerable<string> Write();
     }
 }
