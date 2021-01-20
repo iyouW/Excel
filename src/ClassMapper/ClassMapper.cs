@@ -45,17 +45,9 @@ namespace src.ClassMapper
 
         protected ClassMapper<T> Validate(Expression<Func<T, object>> lambda, Func<List<IPropertyMapper>, IValidator> ValidatorFactory)
         {
-            var propMappers = new List<IPropertyMapper>();
             var members = GetMemberInfos(lambda);
-            foreach (var member in members)
-            {
-                var propMapper = PropertyMappers.Find(o => o.Name == member.Name);
-                if (propMapper == null)
-                { 
-                }
-                propMappers.Add(propMapper);
-            }
-            Validators.Add(ValidatorFactory(propMappers));
+            var propMappers = PropertyMappers.Where(o => members.Any(m => m.Name == o.Name));
+            Validators.Add(ValidatorFactory(propMappers.ToList()));
             return this;
         }
 
