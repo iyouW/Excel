@@ -11,6 +11,10 @@ namespace src.Excel.Internal
         public static object GetValue(this ICell cell)
         {
             object res;
+            if (cell == null)
+            {
+                return null;
+            }
             switch (cell.CellType)
             {
                 case CellType.Boolean:
