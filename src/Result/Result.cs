@@ -18,6 +18,12 @@ namespace src.Result
             Errors.Add(error);
         }
 
+        public void AddError(string message)
+        {
+            var error = new Error.Error(message);
+            AddError(error);
+        }
+
         public void AddError(IList<IError> errors)
         {
             Errors.AddRange(errors);

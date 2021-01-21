@@ -7,22 +7,14 @@ namespace src.Error
     {
         public string Message { get; private set; }
 
-        public List<IError> InnerErrors { get; private set; }
-
         public Error(string message)
-            : this(message, new List<IError>())
-        { 
-        }
-
-        public Error(string message, List<IError> innerErrors)
         {
             Message = message;
-            InnerErrors = innerErrors;
         }
 
-        public IEnumerable<string> Write()
+        public string Write()
         {
-            throw new System.NotImplementedException();
+            return Message;
         }
     }
 }

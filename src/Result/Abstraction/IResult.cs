@@ -8,6 +8,7 @@ namespace Excel.Result.Abstraction
         bool IsSuccess {get;}
         List<IError> Errors {get;}
 
+        void AddError(string message);
         void AddError(IError error);
         void AddError(IList<IError> errors);
         void AddError(IEnumerable<IError> errors);
